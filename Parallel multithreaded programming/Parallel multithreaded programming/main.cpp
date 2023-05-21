@@ -100,7 +100,8 @@ public:
     // Get names of all tasks
     vector<string> get_task_names() const {
         vector<string> task_names;
-        for (Task task : tasks) {
+        for (Task task : tasks)
+        {
             task_names.push_back(task.name);
         }
         return task_names;
@@ -126,12 +127,14 @@ public:
 
     // Get score for a specific task and student
     int get_score(string student, string task) const {
-        auto it = find(get_task_names().begin(), get_task_names().end(), task);
-        if (it == get_task_names().end()) {
+        auto it = find_if(tasks.begin(), tasks.end(), [task](const Task& t) {
+            return t.name == task;
+            });
+        if (it == tasks.end()) {
             cout << "Error: task not found." << endl;
             return -1;
         }
-        int task_index = it - get_task_names().begin();
+        int task_index = it - tasks.begin();
         auto it2 = scores.find(student);
         if (it2 == scores.end()) {
             cout << "Error: student not found." << endl;
@@ -144,7 +147,6 @@ public:
         }
         return student_scores[task_index];
     }
-
 };
 
 int main() {
@@ -181,21 +183,5 @@ int main() {
     cout << "Overall result for Student 2: " << task_manager.calculate_result("Student 2") << endl;
     cout << "Overall result for Student 3: " << task_manager.calculate_result("Student 3") << endl;
 
-
-    // Get score for a specific task and student
-    cout << "Score for Student 1, Task 1: " << task_manager.get_score("Student 1", "Task 1") << endl;
-
-    // Calculate result for each student
-    cout << "Results:" << endl;
-    for (string student : task_manager.get_student_names()) {
-        cout << student << ": " << task_manager.calculate_result(student) << endl;
-    }
-
     return 0;
 }
-
-// The program adds three tasks and four students with different scores to the task manager object.
-// Then, it outputs the number of tasks and their names using the get_task_names() method.
-// It also gets the score for a specific task and student using the get_score() method.
-// Finally, it calculates and outputs the result for each student using the calculate_result() method.
-// The program uses four worker threads for parallelization by default.
